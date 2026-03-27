@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SportNews</string>
+    <string name="app_name">FonSport News</string>
     <string name="home">Home</string>
     <string name="scores">Scores</string>
     <string name="favorites">Favorites</string>

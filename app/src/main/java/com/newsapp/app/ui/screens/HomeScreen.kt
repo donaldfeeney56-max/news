@@ -37,7 +37,7 @@ fun HomeScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = { Text("SportNews") },
+                title = { Text("FonSport News") },
                 actions = {
                     IconButton(onClick = {
                         SportNewsApp.amplitude.track("Search Opened")

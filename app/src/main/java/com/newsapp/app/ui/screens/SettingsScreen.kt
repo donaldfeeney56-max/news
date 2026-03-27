@@ -135,7 +135,7 @@ fun SettingsScreen(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
             ListItem(
-                headlineContent = { Text("SportNews") },
+                headlineContent = { Text("FonSport News") },
                 supportingContent = { Text("Version 1.0.0") },
                 leadingContent = { Icon(Icons.Default.Info, null) }
             )

@@ -50,7 +50,7 @@ fun FeedbackScreen(
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = if (attachedUri != null) "*/*" else "message/rfc822"
             putExtra(Intent.EXTRA_EMAIL, arrayOf("donaldfeeney56@gmail.com"))
-            putExtra(Intent.EXTRA_SUBJECT, "SportNews App Feedback")
+            putExtra(Intent.EXTRA_SUBJECT, "FonSport News App Feedback")
             putExtra(Intent.EXTRA_TEXT, feedbackText)
             if (attachedUri != null) {
                 putExtra(Intent.EXTRA_STREAM, attachedUri)

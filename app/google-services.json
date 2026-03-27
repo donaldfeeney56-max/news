@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1023208309455",
+    "project_id": "spotsnews-9d65a",
+    "storage_bucket": "spotsnews-9d65a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023208309455:android:cd0e266e771c04f5bdedba",
+        "android_client_info": {
+          "package_name": "com.newsapp.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFVCUrel-nCHwq4LUdzm-ewSYfLz73Ypk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

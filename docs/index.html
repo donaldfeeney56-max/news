@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportNews — Privacy Policy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            background-color: #1a1111;
+            color: #f1dfdc;
+            line-height: 1.7;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h1 {
+            color: #ff8a80;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            color: #a08c8b;
+            font-size: 14px;
+            margin-bottom: 40px;
+        }
+        h2 {
+            color: #ff8a80;
+            font-size: 20px;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #534342;
+        }
+        h3 {
+            color: #e7bdb8;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+        p {
+            margin-bottom: 12px;
+            color: #d4c0bd;
+        }
+        ul {
+            margin-bottom: 12px;
+            padding-left: 24px;
+        }
+        li {
+            margin-bottom: 6px;
+            color: #d4c0bd;
+        }
+        strong {
+            color: #f1dfdc;
+        }
+        a {
+            color: #ff8a80;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .card {
+            background-color: #2c1f1f;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+            border: 1px solid #534342;
+        }
+        .badge {
+            display: inline-block;
+            background-color: #8c1d18;
+            color: #ffdad6;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 6px;
+            margin-bottom: 4px;
+        }
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #534342;
+            text-align: center;
+            color: #a08c8b;
+            font-size: 13px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid #534342;
+        }
+        th {
+            color: #e7bdb8;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            color: #d4c0bd;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Privacy Policy</h1>
+        <p class="subtitle">SportNews App &mdash; Last updated: March 27, 2026</p>
+
+        <p>
+            Welcome to <strong>SportNews</strong>. We are committed to protecting your privacy.
+            This Privacy Policy describes how we collect, use, and share information when you
+            use our mobile application.
+        </p>
+
+        <h2>1. About the App</h2>
+        <p>
+            SportNews is a sports news aggregator that provides the latest news articles, live scores,
+            and video highlights from various sports. The app allows you to browse news by category,
+            save favorite articles, bookmark content for later reading, search for specific topics,
+            and scan QR codes.
+        </p>
+
+        <h2>2. Information We Collect</h2>
+
+        <h3>2.1 Analytics Data</h3>
+        <div class="card">
+            <p>We use <strong>Amplitude Analytics</strong> to understand how users interact with the app and improve the user experience. This includes:</p>
+            <ul>
+                <li>App open and close events</li>
+                <li>Session duration and frequency</li>
+                <li>Screen views and navigation patterns</li>
+                <li>Feature usage (e.g., which categories are popular, search queries, video plays)</li>
+                <li>Settings preferences (theme, notifications, refresh interval)</li>
+                <li>Device type, OS version, and app version</li>
+            </ul>
+            <p><span class="badge">Amplitude</span> <span class="badge">Session Replay</span></p>
+            <p>
+                We also use <strong>Amplitude Session Replay</strong>, which records anonymized session
+                replays to help us understand user interactions and identify usability issues. Session
+                replays do not capture personal data such as passwords or payment information.
+            </p>
+        </div>
+
+        <h3>2.2 Locally Stored Data</h3>
+        <div class="card">
+            <p>The following data is stored <strong>locally on your device</strong> and is not transmitted to our servers:</p>
+            <ul>
+                <li><strong>Favorites & Bookmarks</strong> — articles you save are stored in a local database on your device</li>
+                <li><strong>App Settings</strong> — your preferences (dark/light theme, notification settings, auto-refresh interval) are stored locally using DataStore</li>
+                <li><strong>Search History</strong> — recent search queries are stored locally for your convenience</li>
+                <li><strong>WebView Cache</strong> — cached URLs for performance optimization</li>
+            </ul>
+        </div>
+
+        <h3>2.3 Firebase</h3>
+        <div class="card">
+            <p>
+                We use <strong>Google Firebase Firestore</strong> to manage app configuration and content delivery.
+                Firebase may collect standard diagnostic and performance data as described in
+                <a href="https://firebase.google.com/support/privacy" target="_blank">Google's Firebase Privacy Policy</a>.
+            </p>
+        </div>
+
+        <h2>3. Permissions</h2>
+        <p>The app requests the following permissions:</p>
+
+        <table>
+            <tr>
+                <th>Permission</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td><strong>Internet</strong></td>
+                <td>Required to load news articles, live scores, video highlights, and send analytics data</td>
+            </tr>
+            <tr>
+                <td><strong>Network State</strong></td>
+                <td>Used to check network connectivity and adjust app behavior accordingly</td>
+            </tr>
+            <tr>
+                <td><strong>Camera</strong></td>
+                <td>Used for the QR code scanner feature and to capture photos when attaching files to feedback</td>
+            </tr>
+            <tr>
+                <td><strong>Notifications</strong></td>
+                <td>Used to send push notifications about breaking sports news (can be disabled in settings)</td>
+            </tr>
+            <tr>
+                <td><strong>Storage / Media</strong></td>
+                <td>Used to attach screenshots or files when sending feedback, and to download files from web content</td>
+            </tr>
+        </table>
+
+        <h2>4. How We Use Your Information</h2>
+        <p>We use collected information to:</p>
+        <ul>
+            <li>Provide and maintain the app's core functionality</li>
+            <li>Analyze usage patterns to improve features and user experience</li>
+            <li>Identify and fix bugs and performance issues</li>
+            <li>Understand which content and features are most popular</li>
+            <li>Send push notifications about breaking news (if enabled)</li>
+        </ul>
+
+        <h2>5. Feedback Feature</h2>
+        <p>
+            The app includes a feedback feature that allows you to send us messages with optional
+            file attachments. When you use this feature, your message is sent via your device's
+            email client to <strong>donaldfeeney56@gmail.com</strong>. We only receive the information
+            you choose to include in your message. The feedback is processed solely to respond
+            to your inquiry and improve the app.
+        </p>
+
+        <h2>6. Data Sharing</h2>
+        <p>We do <strong>not sell</strong> your personal information. Data may be shared only with:</p>
+        <ul>
+            <li><strong>Amplitude</strong> — analytics data for app improvement (see <a href="https://amplitude.com/privacy" target="_blank">Amplitude Privacy Policy</a>)</li>
+            <li><strong>Google Firebase</strong> — app configuration and diagnostics (see <a href="https://firebase.google.com/support/privacy" target="_blank">Firebase Privacy Policy</a>)</li>
+        </ul>
+
+        <h2>7. Data Retention</h2>
+        <p>
+            Analytics data is retained in Amplitude according to their standard retention policies.
+            Locally stored data (favorites, bookmarks, settings) persists on your device until you
+            clear the app's data or uninstall the application.
+        </p>
+
+        <h2>8. Children's Privacy</h2>
+        <p>
+            SportNews is not directed at children under the age of 13. We do not knowingly collect
+            personal information from children. If you believe a child has provided us with personal
+            data, please contact us so we can take appropriate action.
+        </p>
+
+        <h2>9. Your Rights</h2>
+        <p>You can:</p>
+        <ul>
+            <li>Clear all locally stored data by clearing the app's data or cache in your device settings</li>
+            <li>Disable push notifications in the app settings or through your device settings</li>
+            <li>Opt out of analytics tracking by contacting us</li>
+            <li>Request deletion of your analytics data by contacting us</li>
+        </ul>
+
+        <h2>10. Changes to This Policy</h2>
+        <p>
+            We may update this Privacy Policy from time to time. Any changes will be reflected on this
+            page with an updated "Last updated" date. We encourage you to review this policy periodically.
+        </p>
+
+        <h2>11. Contact Us</h2>
+        <div class="card">
+            <p>If you have any questions or concerns about this Privacy Policy, please contact us:</p>
+            <p><strong>Email:</strong> <a href="mailto:donaldfeeney56@gmail.com">donaldfeeney56@gmail.com</a></p>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 SportNews. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

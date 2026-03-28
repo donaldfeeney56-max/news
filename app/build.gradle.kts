@@ -19,7 +19,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.newsapp.app"
+        applicationId = "com.fonsport.news"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

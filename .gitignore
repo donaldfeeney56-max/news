@@ -10,3 +10,7 @@
 *.apk
 *.aab
 *.DS_Store
+*.jks
+*.keystore
+/keystore/
+icon.jpg

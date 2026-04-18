@@ -36,7 +36,7 @@ fun FavoritesScreen(
                 Tab(
                     selected = selectedTab == 0,
                     onClick = {
-                        SportNewsApp.amplitude.track("Favorites Tab Selected", mapOf("tab" to "favorites"))
+                        SportNewsApp.amplitude?.track("Favorites Tab Selected", mapOf("tab" to "favorites"))
                         viewModel.selectTab(0)
                     },
                     text = { Text("Favorites (${favorites.size})") }
@@ -44,7 +44,7 @@ fun FavoritesScreen(
                 Tab(
                     selected = selectedTab == 1,
                     onClick = {
-                        SportNewsApp.amplitude.track("Favorites Tab Selected", mapOf("tab" to "bookmarks"))
+                        SportNewsApp.amplitude?.track("Favorites Tab Selected", mapOf("tab" to "bookmarks"))
                         viewModel.selectTab(1)
                     },
                     text = { Text("Bookmarks (${bookmarks.size})") }
@@ -69,10 +69,10 @@ fun FavoritesScreen(
                                 confirmValueChange = { value ->
                                     if (value != SwipeToDismissBoxValue.Settled) {
                                         if (selectedTab == 0) {
-                                            SportNewsApp.amplitude.track("Favorite Removed", mapOf("article_id" to article.id))
+                                            SportNewsApp.amplitude?.track("Favorite Removed", mapOf("article_id" to article.id))
                                             viewModel.removeFavorite(article.id)
                                         } else {
-                                            SportNewsApp.amplitude.track("Bookmark Removed", mapOf("article_id" to article.id))
+                                            SportNewsApp.amplitude?.track("Bookmark Removed", mapOf("article_id" to article.id))
                                             viewModel.removeBookmark(article.id)
                                         }
                                         true
@@ -89,7 +89,7 @@ fun FavoritesScreen(
                             CompactNewsCard(
                                 article = article,
                                 onClick = {
-                                    SportNewsApp.amplitude.track("Article Opened", mapOf("article_id" to article.id, "source" to "favorites"))
+                                    SportNewsApp.amplitude?.track("Article Opened", mapOf("article_id" to article.id, "source" to "favorites"))
                                     onArticleClick(article.id)
                                 }
                             )

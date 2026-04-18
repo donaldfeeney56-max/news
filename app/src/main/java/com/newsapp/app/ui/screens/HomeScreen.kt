@@ -40,7 +40,7 @@ fun HomeScreen(
                 title = { Text("FonSport News") },
                 actions = {
                     IconButton(onClick = {
-                        SportNewsApp.amplitude.track("Search Opened")
+                        SportNewsApp.amplitude?.track("Search Opened")
                         onSearchClick()
                     }) {
                         Icon(Icons.Default.Search, contentDescription = "Search")
@@ -53,7 +53,7 @@ fun HomeScreen(
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing),
             onRefresh = {
-                SportNewsApp.amplitude.track("Home Pull to Refresh")
+                SportNewsApp.amplitude?.track("Home Pull to Refresh")
                 viewModel.refreshNews()
             },
             modifier = Modifier
@@ -75,7 +75,7 @@ fun HomeScreen(
                                 FilterChip(
                                     selected = category == selectedCategory,
                                     onClick = {
-                                        SportNewsApp.amplitude.track("Category Selected", mapOf("category" to category.displayName))
+                                        SportNewsApp.amplitude?.track("Category Selected", mapOf("category" to category.displayName))
                                         viewModel.selectCategory(category)
                                     },
                                     label = { Text(category.displayName) }
@@ -110,15 +110,15 @@ fun HomeScreen(
                             NewsCard(
                                 article = articles.first(),
                                 onClick = {
-                                    SportNewsApp.amplitude.track("Article Opened", mapOf("article_id" to articles.first().id, "source" to "featured"))
+                                    SportNewsApp.amplitude?.track("Article Opened", mapOf("article_id" to articles.first().id, "source" to "featured"))
                                     onArticleClick(articles.first().id)
                                 },
                                 onFavoriteClick = {
-                                    SportNewsApp.amplitude.track("Favorite Toggled", mapOf("article_id" to articles.first().id))
+                                    SportNewsApp.amplitude?.track("Favorite Toggled", mapOf("article_id" to articles.first().id))
                                     viewModel.toggleFavorite(articles.first().id, !articles.first().isFavorite)
                                 },
                                 onBookmarkClick = {
-                                    SportNewsApp.amplitude.track("Bookmark Toggled", mapOf("article_id" to articles.first().id))
+                                    SportNewsApp.amplitude?.track("Bookmark Toggled", mapOf("article_id" to articles.first().id))
                                     viewModel.toggleBookmark(articles.first().id, !articles.first().isBookmarked)
                                 }
                             )
@@ -130,7 +130,7 @@ fun HomeScreen(
                         CompactNewsCard(
                             article = article,
                             onClick = {
-                                SportNewsApp.amplitude.track("Article Opened", mapOf("article_id" to article.id, "source" to "feed"))
+                                SportNewsApp.amplitude?.track("Article Opened", mapOf("article_id" to article.id, "source" to "feed"))
                                 onArticleClick(article.id)
                             }
                         )

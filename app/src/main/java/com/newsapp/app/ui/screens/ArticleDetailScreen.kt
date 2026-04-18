@@ -45,7 +45,7 @@ fun ArticleDetailScreen(
                 actions = {
                     article?.let { art ->
                         IconButton(onClick = {
-                            SportNewsApp.amplitude.track("Article Favorite Toggled", mapOf("article_id" to art.id))
+                            SportNewsApp.amplitude?.track("Article Favorite Toggled", mapOf("article_id" to art.id))
                             viewModel.toggleFavorite()
                         }) {
                             Icon(
@@ -55,7 +55,7 @@ fun ArticleDetailScreen(
                             )
                         }
                         IconButton(onClick = {
-                            SportNewsApp.amplitude.track("Article Bookmark Toggled", mapOf("article_id" to art.id))
+                            SportNewsApp.amplitude?.track("Article Bookmark Toggled", mapOf("article_id" to art.id))
                             viewModel.toggleBookmark()
                         }) {
                             Icon(
@@ -64,7 +64,7 @@ fun ArticleDetailScreen(
                             )
                         }
                         IconButton(onClick = {
-                            SportNewsApp.amplitude.track("Article Shared", mapOf("article_id" to art.id))
+                            SportNewsApp.amplitude?.track("Article Shared", mapOf("article_id" to art.id))
                             val sendIntent = Intent().apply {
                                 action = Intent.ACTION_SEND
                                 putExtra(Intent.EXTRA_TEXT, "${art.title}\n${art.sourceUrl}")
@@ -119,7 +119,7 @@ fun ArticleDetailScreen(
                         if (art.sourceUrl.isNotBlank()) {
                             OutlinedButton(
                                 onClick = {
-                                    SportNewsApp.amplitude.track("Read Full Article", mapOf("article_id" to art.id, "source_url" to art.sourceUrl))
+                                    SportNewsApp.amplitude?.track("Read Full Article", mapOf("article_id" to art.id, "source_url" to art.sourceUrl))
                                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(art.sourceUrl))
                                     context.startActivity(intent)
                                 },

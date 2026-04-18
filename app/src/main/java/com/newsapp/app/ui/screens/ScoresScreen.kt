@@ -43,7 +43,7 @@ fun ScoresScreen(
         SwipeRefresh(
             state = rememberSwipeRefreshState(isLoading),
             onRefresh = {
-                SportNewsApp.amplitude.track("Scores Pull to Refresh")
+                SportNewsApp.amplitude?.track("Scores Pull to Refresh")
                 viewModel.fetchScores()
             },
             modifier = Modifier
@@ -62,7 +62,7 @@ fun ScoresScreen(
                                 SegmentedButton(
                                     selected = filter == selectedFilter,
                                     onClick = {
-                                        SportNewsApp.amplitude.track("Score Filter Changed", mapOf("filter" to filter.displayName))
+                                        SportNewsApp.amplitude?.track("Score Filter Changed", mapOf("filter" to filter.displayName))
                                         viewModel.setFilter(filter)
                                     },
                                     shape = SegmentedButtonDefaults.itemShape(index = index, count = ScoreFilter.entries.size)

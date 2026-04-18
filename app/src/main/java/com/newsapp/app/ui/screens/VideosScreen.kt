@@ -45,7 +45,7 @@ fun VideosScreen(
         SwipeRefresh(
             state = rememberSwipeRefreshState(isLoading),
             onRefresh = {
-                SportNewsApp.amplitude.track("Videos Pull to Refresh")
+                SportNewsApp.amplitude?.track("Videos Pull to Refresh")
                 viewModel.fetchVideos(selectedCategory)
             },
             modifier = Modifier
@@ -71,7 +71,7 @@ fun VideosScreen(
                                 FilterChip(
                                     selected = category == selectedCategory,
                                     onClick = {
-                                        SportNewsApp.amplitude.track("Video Category Selected", mapOf("category" to category.displayName))
+                                        SportNewsApp.amplitude?.track("Video Category Selected", mapOf("category" to category.displayName))
                                         viewModel.fetchVideos(category)
                                     },
                                     label = { Text(category.displayName) }
@@ -102,7 +102,7 @@ fun VideosScreen(
                         VideoCard(
                             video = video,
                             onClick = {
-                                SportNewsApp.amplitude.track("Video Played", mapOf("video_id" to video.id))
+                                SportNewsApp.amplitude?.track("Video Played", mapOf("video_id" to video.id))
                                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(video.videoUrl))
                                 context.startActivity(intent)
                             }

@@ -1,6 +1,7 @@
 package com.newsapp.app
 
 import android.app.Application
+import android.util.Log
 import com.amplitude.android.Amplitude
 import com.amplitude.android.Configuration
 import com.amplitude.android.DefaultTrackingOptions
@@ -11,21 +12,33 @@ import dagger.hilt.android.HiltAndroidApp
 class SportNewsApp : Application() {
 
     companion object {
-        lateinit var amplitude: Amplitude
+        var amplitude: Amplitude? = null
             private set
     }
 
     override fun onCreate() {
         super.onCreate()
-        amplitude = Amplitude(
-            Configuration(
-                apiKey = BuildConfig.AMPLITUDE_API_KEY,
-                context = applicationContext,
-                defaultTracking = DefaultTrackingOptions.ALL
-            )
-        )
+        initAmplitude()
+    }
 
-        // Add Session Replay plugin
-        amplitude.add(SessionReplayPlugin())
+    private fun initAmplitude() {
+        val apiKey = BuildConfig.AMPLITUDE_API_KEY
+        if (apiKey.isBlank()) {
+            Log.w("SportNewsApp", "Amplitude API key is missing; analytics disabled.")
+            return
+        }
+        try {
+            val instance = Amplitude(
+                Configuration(
+                    apiKey = apiKey,
+                    context = applicationContext,
+                    defaultTracking = DefaultTrackingOptions.ALL
+                )
+            )
+            instance.add(SessionReplayPlugin())
+            amplitude = instance
+        } catch (t: Throwable) {
+            Log.e("SportNewsApp", "Failed to initialize Amplitude", t)
+        }
     }
 }

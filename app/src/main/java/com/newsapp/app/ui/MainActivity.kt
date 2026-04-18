@@ -86,7 +86,7 @@ fun MainScreen() {
     val currentDestination = navBackStackEntry?.destination
 
     val qrScannerLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
-        SportNewsApp.amplitude.track("QR Scan Completed", mapOf("has_result" to (result.contents != null).toString()))
+        SportNewsApp.amplitude?.track("QR Scan Completed", mapOf("has_result" to (result.contents != null).toString()))
     }
 
     val bottomNavItems = listOf(
@@ -106,7 +106,7 @@ fun MainScreen() {
             if (showBottomBar) {
                 FloatingActionButton(
                     onClick = {
-                        SportNewsApp.amplitude.track("QR Scanner Opened")
+                        SportNewsApp.amplitude?.track("QR Scanner Opened")
                         val options = ScanOptions().apply {
                             setDesiredBarcodeFormats(ScanOptions.QR_CODE)
                             setPrompt("Scan QR code")
@@ -144,7 +144,7 @@ fun MainScreen() {
                             label = { Text(item.label) },
                             selected = selected,
                             onClick = {
-                                SportNewsApp.amplitude.track("Tab Selected", mapOf("tab" to item.label))
+                                SportNewsApp.amplitude?.track("Tab Selected", mapOf("tab" to item.label))
                                 navController.navigate(item.screen.route) {
                                     popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true

@@ -57,7 +57,7 @@ fun FeedbackScreen(
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
         }
-        SportNewsApp.amplitude.track("Feedback Sent", mapOf("has_attachment" to (attachedUri != null).toString()))
+        SportNewsApp.amplitude?.track("Feedback Sent", mapOf("has_attachment" to (attachedUri != null).toString()))
         context.startActivity(Intent.createChooser(intent, "Send feedback"))
     }
 

@@ -66,7 +66,7 @@ fun SearchScreen(
                 actions = {
                     if (searchQuery.isNotBlank()) {
                         IconButton(onClick = {
-                            SportNewsApp.amplitude.track("Search Performed", mapOf("query" to searchQuery))
+                            SportNewsApp.amplitude?.track("Search Performed", mapOf("query" to searchQuery))
                             viewModel.addToRecentSearches(searchQuery)
                             viewModel.onlineSearch(searchQuery)
                         }) {
@@ -125,7 +125,7 @@ fun SearchScreen(
                 CompactNewsCard(
                     article = article,
                     onClick = {
-                        SportNewsApp.amplitude.track("Article Opened", mapOf("article_id" to article.id, "source" to "search"))
+                        SportNewsApp.amplitude?.track("Article Opened", mapOf("article_id" to article.id, "source" to "search"))
                         onArticleClick(article.id)
                     }
                 )

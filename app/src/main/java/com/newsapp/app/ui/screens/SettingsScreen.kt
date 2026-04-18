@@ -49,7 +49,7 @@ fun SettingsScreen(
                 supportingContent = { Text("Switch between light and dark mode") },
                 leadingContent = { Icon(if (isDarkTheme) Icons.Default.Brightness2 else Icons.Default.Brightness7, null) },
                 trailingContent = { Switch(checked = isDarkTheme, onCheckedChange = {
-                    SportNewsApp.amplitude.track("Setting Changed", mapOf("setting" to "dark_theme", "value" to it.toString()))
+                    SportNewsApp.amplitude?.track("Setting Changed", mapOf("setting" to "dark_theme", "value" to it.toString()))
                     viewModel.setDarkTheme(it)
                 }) }
             )
@@ -67,7 +67,7 @@ fun SettingsScreen(
                 supportingContent = { Text("Get notified about breaking news") },
                 leadingContent = { Icon(Icons.Default.Notifications, null) },
                 trailingContent = { Switch(checked = notificationsEnabled, onCheckedChange = {
-                    SportNewsApp.amplitude.track("Setting Changed", mapOf("setting" to "notifications", "value" to it.toString()))
+                    SportNewsApp.amplitude?.track("Setting Changed", mapOf("setting" to "notifications", "value" to it.toString()))
                     viewModel.setNotificationsEnabled(it)
                 }) }
             )
@@ -85,7 +85,7 @@ fun SettingsScreen(
                 supportingContent = { Text("Automatically refresh news feed") },
                 leadingContent = { Icon(Icons.Default.Refresh, null) },
                 trailingContent = { Switch(checked = autoRefresh, onCheckedChange = {
-                    SportNewsApp.amplitude.track("Setting Changed", mapOf("setting" to "auto_refresh", "value" to it.toString()))
+                    SportNewsApp.amplitude?.track("Setting Changed", mapOf("setting" to "auto_refresh", "value" to it.toString()))
                     viewModel.setAutoRefresh(it)
                 }) }
             )
@@ -121,7 +121,7 @@ fun SettingsScreen(
                 supportingContent = { Text("Report a bug or suggest an improvement") },
                 leadingContent = { Icon(Icons.Default.Feedback, null) },
                 modifier = Modifier.clickable {
-                    SportNewsApp.amplitude.track("Feedback Screen Opened")
+                    SportNewsApp.amplitude?.track("Feedback Screen Opened")
                     onFeedbackClick()
                 }
             )

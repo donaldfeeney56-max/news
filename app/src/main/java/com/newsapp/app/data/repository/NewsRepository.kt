@@ -32,6 +32,12 @@ class NewsRepository @Inject constructor(
 
     suspend fun toggleBookmark(id: String, isBookmarked: Boolean) = articleDao.setBookmarked(id, isBookmarked)
 
+    fun getRecentlyViewed(): Flow<List<NewsArticle>> = articleDao.getRecentlyViewed()
+
+    suspend fun markAsViewed(id: String) = articleDao.setLastViewed(id, System.currentTimeMillis())
+
+    suspend fun clearHistory() = articleDao.clearHistory()
+
     suspend fun fetchNews(category: SportCategory = SportCategory.ALL): Result<List<NewsArticle>> {
         return try {
             val articles = mutableListOf<NewsArticle>()

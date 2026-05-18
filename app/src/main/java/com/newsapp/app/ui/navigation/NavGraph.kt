@@ -16,6 +16,7 @@ sealed class Screen(val route: String) {
     object Search : Screen("search")
     object Settings : Screen("settings")
     object Feedback : Screen("feedback")
+    object History : Screen("history")
     object ArticleDetail : Screen("article/{articleId}") {
         fun createRoute(articleId: String) = "article/$articleId"
     }
@@ -55,12 +56,21 @@ fun NavGraph(navController: NavHostController) {
         }
         composable(Screen.Settings.route) {
             SettingsScreen(
-                onFeedbackClick = { navController.navigate(Screen.Feedback.route) }
+                onFeedbackClick = { navController.navigate(Screen.Feedback.route) },
+                onHistoryClick = { navController.navigate(Screen.History.route) }
             )
         }
         composable(Screen.Feedback.route) {
             FeedbackScreen(
                 onBackClick = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.History.route) {
+            HistoryScreen(
+                onBackClick = { navController.popBackStack() },
+                onArticleClick = { articleId ->
+                    navController.navigate(Screen.ArticleDetail.createRoute(articleId))
+                }
             )
         }
         composable(

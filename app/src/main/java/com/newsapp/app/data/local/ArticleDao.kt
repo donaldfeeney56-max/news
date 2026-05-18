@@ -40,6 +40,15 @@ interface ArticleDao {
     @Query("UPDATE articles SET isBookmarked = :isBookmarked WHERE id = :id")
     suspend fun setBookmarked(id: String, isBookmarked: Boolean)
 
-    @Query("DELETE FROM articles WHERE isFavorite = 0 AND isBookmarked = 0 AND publishedAt < :timestamp")
+    @Query("UPDATE articles SET lastViewedAt = :timestamp WHERE id = :id")
+    suspend fun setLastViewed(id: String, timestamp: Long)
+
+    @Query("SELECT * FROM articles WHERE lastViewedAt IS NOT NULL ORDER BY lastViewedAt DESC LIMIT 50")
+    fun getRecentlyViewed(): Flow<List<NewsArticle>>
+
+    @Query("UPDATE articles SET lastViewedAt = NULL")
+    suspend fun clearHistory()
+
+    @Query("DELETE FROM articles WHERE isFavorite = 0 AND isBookmarked = 0 AND lastViewedAt IS NULL AND publishedAt < :timestamp")
     suspend fun deleteOldArticles(timestamp: Long)
 }

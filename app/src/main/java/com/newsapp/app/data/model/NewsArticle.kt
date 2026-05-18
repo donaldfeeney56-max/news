@@ -15,7 +15,8 @@ data class NewsArticle(
     val category: SportCategory,
     val publishedAt: Long,
     val isFavorite: Boolean = false,
-    val isBookmarked: Boolean = false
+    val isBookmarked: Boolean = false,
+    val lastViewedAt: Long? = null
 )
 
 enum class SportCategory(val displayName: String, val icon: String) {

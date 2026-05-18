@@ -19,6 +19,7 @@ import com.newsapp.app.ui.viewmodel.SettingsViewModel
 @Composable
 fun SettingsScreen(
     onFeedbackClick: () -> Unit = {},
+    onHistoryClick: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val isDarkTheme by viewModel.isDarkTheme.collectAsState()
@@ -107,6 +108,24 @@ fun SettingsScreen(
                     }
                 )
             }
+            HorizontalDivider()
+
+            // Library
+            Text(
+                text = "Library",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+            ListItem(
+                headlineContent = { Text("Reading History") },
+                supportingContent = { Text("Articles you have recently opened") },
+                leadingContent = { Icon(Icons.Default.History, null) },
+                modifier = Modifier.clickable {
+                    SportNewsApp.amplitude?.track("History Screen Opened")
+                    onHistoryClick()
+                }
+            )
             HorizontalDivider()
 
             // Feedback

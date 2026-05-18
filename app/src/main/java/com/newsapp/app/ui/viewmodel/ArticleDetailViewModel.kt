@@ -31,8 +31,12 @@ class ArticleDetailViewModel @Inject constructor(
     private fun loadArticle() {
         viewModelScope.launch {
             _isLoading.value = true
-            _article.value = newsRepository.getArticleById(articleId)
+            val loaded = newsRepository.getArticleById(articleId)
+            _article.value = loaded
             _isLoading.value = false
+            if (loaded != null) {
+                newsRepository.markAsViewed(loaded.id)
+            }
         }
     }
 

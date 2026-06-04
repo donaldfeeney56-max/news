@@ -1,0 +1,99 @@
+name: Google Play Production Draft
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "play-production-draft-*"
+
+jobs:
+  create-production-draft:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Google API client
+        run: npm install googleapis@144
+
+      - name: Create production draft release
+        env:
+          SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          PACKAGE_NAME: com.fonsport.news
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const { google } = require('googleapis');
+
+          const serviceAccountJson = process.env.SERVICE_ACCOUNT_JSON;
+          if (!serviceAccountJson) {
+            throw new Error('Missing SERVICE_ACCOUNT_JSON secret');
+          }
+
+          const buildGradle = fs.readFileSync('app/build.gradle.kts', 'utf8');
+          const versionCode = buildGradle.match(/versionCode\s*=\s*(\d+)/)?.[1];
+          const versionName = buildGradle.match(/versionName\s*=\s*"([^"]+)"/)?.[1];
+          if (!versionCode || !versionName) {
+            throw new Error('Could not read versionCode/versionName from app/build.gradle.kts');
+          }
+
+          const auth = new google.auth.GoogleAuth({
+            credentials: JSON.parse(serviceAccountJson),
+            scopes: ['https://www.googleapis.com/auth/androidpublisher'],
+          });
+
+          const packageName = process.env.PACKAGE_NAME;
+          const androidpublisher = google.androidpublisher({ version: 'v3', auth });
+
+          async function main() {
+            const edit = await androidpublisher.edits.insert({ packageName });
+            const editId = edit.data.id;
+
+            let productionReleases = [];
+            try {
+              const production = await androidpublisher.edits.tracks.get({
+                packageName,
+                editId,
+                track: 'production',
+              });
+              productionReleases = production.data.releases || [];
+            } catch (error) {
+              if (error.code !== 404) throw error;
+            }
+
+            const releases = productionReleases.filter((release) => {
+              const codes = (release.versionCodes || []).map(String);
+              return !codes.includes(String(versionCode));
+            });
+
+            releases.push({
+              name: `${versionName} (${versionCode})`,
+              versionCodes: [String(versionCode)],
+              status: 'draft',
+            });
+
+            await androidpublisher.edits.tracks.update({
+              packageName,
+              editId,
+              track: 'production',
+              requestBody: {
+                track: 'production',
+                releases,
+              },
+            });
+
+            await androidpublisher.edits.commit({ packageName, editId });
+            console.log(`Created production draft for ${packageName} ${versionName} (${versionCode})`);
+          }
+
+          main().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE

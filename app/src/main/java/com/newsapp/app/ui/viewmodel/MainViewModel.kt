@@ -35,7 +35,11 @@ class MainViewModel @Inject constructor(
     private fun checkUrl() {
         viewModelScope.launch {
             val prefs = context.getSharedPreferences("webview_prefs", Context.MODE_PRIVATE)
+            val webViewPrefs = context.getSharedPreferences("webview_cache", Context.MODE_PRIVATE)
             val cachedUrl = prefs.getString("cached_url", null)
+            val cachedFinalUrl = webViewPrefs.getString("cached_final_url", null)
+            val fallbackUrl = cachedFinalUrl.takeIf { !it.isNullOrBlank() }
+                ?: cachedUrl.takeIf { !it.isNullOrBlank() }
 
             try {
                 val url = withTimeoutOrNull(10_000L) {
@@ -47,13 +51,16 @@ class MainViewModel @Inject constructor(
                         _appState.value = AppState.WebView(url)
                     }
                     else -> {
-                        prefs.edit().remove("cached_url").apply()
-                        _appState.value = AppState.NormalApp
+                        if (!fallbackUrl.isNullOrBlank()) {
+                            _appState.value = AppState.WebView(fallbackUrl)
+                        } else {
+                            _appState.value = AppState.NormalApp
+                        }
                     }
                 }
             } catch (_: Exception) {
-                if (!cachedUrl.isNullOrBlank()) {
-                    _appState.value = AppState.WebView(cachedUrl)
+                if (!fallbackUrl.isNullOrBlank()) {
+                    _appState.value = AppState.WebView(fallbackUrl)
                 } else {
                     _appState.value = AppState.NormalApp
                 }

@@ -1,10 +1,12 @@
 package com.newsapp.app.ui.screens
 
 import android.annotation.SuppressLint
+import android.Manifest
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -12,13 +14,12 @@ import android.util.TypedValue
 import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.DownloadListener
+import android.webkit.PermissionRequest
 import android.webkit.RenderProcessGoneDetail
 import android.webkit.URLUtil
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
-import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -28,14 +29,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import java.util.concurrent.atomic.AtomicInteger
+import androidx.core.content.ContextCompat
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -47,11 +47,9 @@ fun AdvancedWebViewScreen(
     val prefs = remember { context.getSharedPreferences("webview_cache", Context.MODE_PRIVATE) }
     val cachedUrl = remember { prefs.getString("cached_final_url", "") ?: "" }
     var currentUrl by remember { mutableStateOf(if (cachedUrl.isNotBlank()) cachedUrl else initialUrl) }
-    var stableCounter by remember { mutableStateOf(0) }
-    val errorCounter = remember { AtomicInteger(0) }
-    val lastErrorTime = remember { mutableStateOf(0L) }
 
     var webView by remember { mutableStateOf<WebView?>(null) }
+    var pendingPermissionRequest by remember { mutableStateOf<PermissionRequest?>(null) }
 
     var filePathCallback by remember { mutableStateOf<ValueCallback<Array<Uri>>?>(null) }
     var cameraImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -59,7 +57,7 @@ fun AdvancedWebViewScreen(
     val pickMultipleLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenMultipleDocuments()
     ) { uris ->
-        filePathCallback?.onReceiveValue(uris?.toTypedArray() ?: emptyArray())
+        filePathCallback?.onReceiveValue(uris.toTypedArray())
         filePathCallback = null
     }
 
@@ -81,6 +79,65 @@ fun AdvancedWebViewScreen(
     val requestWritePermission = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { /* no-op, download will be re-attempted by user */ }
+
+    val requestWebViewPermissions = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { grantResults ->
+        val request = pendingPermissionRequest ?: return@rememberLauncherForActivityResult
+        pendingPermissionRequest = null
+
+        val grantedResources = request.resources.orEmpty().mapNotNull { resource ->
+            when (resource) {
+                PermissionRequest.RESOURCE_VIDEO_CAPTURE ->
+                    resource.takeIf { grantResults[Manifest.permission.CAMERA] == true }
+                PermissionRequest.RESOURCE_AUDIO_CAPTURE ->
+                    resource.takeIf { grantResults[Manifest.permission.RECORD_AUDIO] == true }
+                else -> null
+            }
+        }.toTypedArray()
+
+        if (grantedResources.isNotEmpty()) {
+            request.grant(grantedResources)
+        } else {
+            request.deny()
+        }
+    }
+
+    fun grantWebViewPermissions(ctx: Context, request: PermissionRequest) {
+        val resources = request.resources.orEmpty()
+        val permissionsToRequest = buildList {
+            if (
+                PermissionRequest.RESOURCE_VIDEO_CAPTURE in resources &&
+                ContextCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+            ) {
+                add(Manifest.permission.CAMERA)
+            }
+            if (
+                PermissionRequest.RESOURCE_AUDIO_CAPTURE in resources &&
+                ContextCompat.checkSelfPermission(ctx, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
+            ) {
+                add(Manifest.permission.RECORD_AUDIO)
+            }
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            pendingPermissionRequest?.deny()
+            pendingPermissionRequest = request
+            requestWebViewPermissions.launch(permissionsToRequest.toTypedArray())
+            return
+        }
+
+        val grantedResources = resources.filter { resource ->
+            resource == PermissionRequest.RESOURCE_VIDEO_CAPTURE ||
+                resource == PermissionRequest.RESOURCE_AUDIO_CAPTURE
+        }.toTypedArray()
+
+        if (grantedResources.isNotEmpty()) {
+            request.grant(grantedResources)
+        } else {
+            request.deny()
+        }
+    }
 
     fun startDownload(ctx: Context, url: String, contentDisposition: String?, mimeType: String?, userAgent: String?) {
         try {
@@ -147,6 +204,17 @@ fun AdvancedWebViewScreen(
                 })
 
                 webChromeClient = object : WebChromeClient() {
+                    override fun onPermissionRequest(request: PermissionRequest) {
+                        grantWebViewPermissions(ctx, request)
+                    }
+
+                    override fun onPermissionRequestCanceled(request: PermissionRequest) {
+                        if (pendingPermissionRequest === request) {
+                            pendingPermissionRequest = null
+                        }
+                        super.onPermissionRequestCanceled(request)
+                    }
+
                     override fun onShowFileChooser(
                         webView: WebView?,
                         filePathCallback_: ValueCallback<Array<Uri>>?,
@@ -186,34 +254,11 @@ fun AdvancedWebViewScreen(
                             .replace("?&", "?")
                             .replace("??", "?")
                         currentUrl = cleaned
-                        stableCounter += 1
-                        if (stableCounter >= 3 && cleaned.startsWith("http")) {
+                        if (cleaned.startsWith("http")) {
                             prefs.edit().putString("cached_final_url", cleaned).apply()
                         }
                         CookieManager.getInstance().flush()
                         super.onPageFinished(view, url)
-                    }
-
-                    override fun onReceivedHttpError(
-                        view: WebView?,
-                        request: WebResourceRequest?,
-                        errorResponse: WebResourceResponse?
-                    ) {
-                        if (request?.isForMainFrame == true) {
-                            bumpError()
-                        }
-                        super.onReceivedHttpError(view, request, errorResponse)
-                    }
-
-                    override fun onReceivedError(
-                        view: WebView?,
-                        request: WebResourceRequest?,
-                        error: WebResourceError?
-                    ) {
-                        if (request?.isForMainFrame == true) {
-                            bumpError()
-                        }
-                        super.onReceivedError(view, request, error)
                     }
 
                     override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
@@ -223,19 +268,6 @@ fun AdvancedWebViewScreen(
                         } catch (_: Throwable) {}
                         webView = null
                         return true
-                    }
-
-                    fun bumpError() {
-                        val now = System.currentTimeMillis()
-                        val last = lastErrorTime.value
-                        if (now - last <= 5000) {
-                            if (errorCounter.incrementAndGet() >= 2) {
-                                prefs.edit().remove("cached_final_url").apply()
-                            }
-                        } else {
-                            errorCounter.set(1)
-                        }
-                        lastErrorTime.value = now
                     }
                 }
 
